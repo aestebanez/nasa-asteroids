@@ -4,6 +4,7 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ExpandableListView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.view.menu.ActionMenuItemView
@@ -14,18 +15,22 @@ import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.AsteroidItemBinding
 
-class AsteroidAdapter(private val onClick: (Asteroid) -> Unit) :
+class AsteroidAdapter(private val clickListener: AsteroidListener) :
     ListAdapter<Asteroid, AsteroidAdapter.AsteroidViewHolder>(AsteroidDiffCallback) {
 
-        class AsteroidViewHolder(var binding : AsteroidItemBinding): RecyclerView.ViewHolder(binding.root){
-            fun bind(asteroid: Asteroid) {
-                binding.asteroid = asteroid
-                binding.executePendingBindings()
-            }
+    class AsteroidViewHolder(var binding : AsteroidItemBinding): RecyclerView.ViewHolder(binding.root){
+        fun bind(asteroid: Asteroid) {
+            binding.asteroid = asteroid
+            binding.executePendingBindings()
         }
+    }
+
+    class AsteroidListener(val clickListener: (asteroid: Asteroid) -> Unit){
+        fun onClick(asteroid: Asteroid) = clickListener(asteroid)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AsteroidViewHolder {
-        val withDataBinding: AsteroidItemBinding = AsteroidItemBinding.inflate(LayoutInflater.from(parent.context))
+        val withDataBinding: AsteroidItemBinding = AsteroidItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return AsteroidViewHolder(withDataBinding)
     }
 
@@ -52,7 +57,7 @@ class AsteroidAdapter(private val onClick: (Asteroid) -> Unit) :
         val asteroid = getItem(position)
 
         holder.itemView.setOnClickListener {
-            onClick(asteroid)
+            clickListener.onClick(asteroid)
         }
 
         super.onBindViewHolder(holder, position, payloads)

@@ -12,12 +12,15 @@ interface AsteroidDao{
     @Query("SELECT * FROM asteroids WHERE closeApproachDate = :startDate ORDER BY closeApproachDate DESC")
     fun getAsteroidsDay(startDate : String): LiveData<List<DatabaseAsteroid>>
 
+    @Query("SELECT * FROM asteroids WHERE closeApproachDate = :startDate AND closeApproachDate = :endDate ORDER BY closeApproachDate DESC")
+    fun getAsteroidPeriod(startDate : String, endDate : String) : LiveData<List<DatabaseAsteroid>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg asteroid: DatabaseAsteroid)
 }
 
 
-@Database(entities = [DatabaseAsteroid::class], version = 1, exportSchema = false)
+@Database(entities = [DatabaseAsteroid::class], version = 2, exportSchema = false)
 abstract class AsteroidDatabase : RoomDatabase(){
     abstract val asteroidDao: AsteroidDao
 }
