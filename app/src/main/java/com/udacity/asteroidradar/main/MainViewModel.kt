@@ -9,6 +9,9 @@ import com.udacity.asteroidradar.api.AsteroidApiService
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.repository.AsteroidRepository
 import com.udacity.asteroidradar.utils.Constants.API_KEY
+import com.udacity.asteroidradar.utils.Constants.FILTER_ALL
+import com.udacity.asteroidradar.utils.Constants.FILTER_TODAY
+import com.udacity.asteroidradar.utils.Constants.FILTER_WEEK
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -31,7 +34,15 @@ class MainViewModel(application : Application) : ViewModel() {
         get() {
             return _goToDetailAsteroid
         }
-    val asteroidList = asteroidRepository.allAsteroids
+    private var _filterAsteroids = MutableLiveData(FILTER_ALL)
+
+    val asteroidList = Transformations.switchMap(_filterAsteroids) {
+        when (it!!) {
+            FILTER_WEEK -> asteroidRepository.weekAsteroids
+            FILTER_TODAY -> asteroidRepository.todayAsteroids
+            else -> asteroidRepository.allAsteroids
+        }
+    }
 
 
     init {
@@ -41,6 +52,9 @@ class MainViewModel(application : Application) : ViewModel() {
         }
     }
 
+    fun onChangeFilter(filter : String) {
+        _filterAsteroids.postValue(filter)
+    }
 
     fun onAsteroidClicked(asteroid : Asteroid) {
         _goToDetailAsteroid.value = asteroid

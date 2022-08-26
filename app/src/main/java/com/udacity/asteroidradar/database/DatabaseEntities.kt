@@ -6,7 +6,7 @@ import com.udacity.asteroidradar.Asteroid
 
 @Entity(tableName = "asteroids")
 data class DatabaseAsteroid constructor(
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     val id: Long,
     val codename: String,
     val closeApproachDate: String,
