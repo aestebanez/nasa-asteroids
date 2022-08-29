@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
-class NasaAsteroidsApplication : Application(){
+class AsteroidRadarApplication : Application(){
     val applicationScope = CoroutineScope(Dispatchers.Default)
 
     override fun onCreate() {
