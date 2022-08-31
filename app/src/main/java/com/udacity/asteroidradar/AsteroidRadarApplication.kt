@@ -25,6 +25,7 @@ class AsteroidRadarApplication : Application(){
     private fun setupRecurringWork(){
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiresCharging(true)
             .build()
 
         val repeatingRequest = PeriodicWorkRequestBuilder<AsteroidWorker>(1, TimeUnit.DAYS).setConstraints(constraints).build()
